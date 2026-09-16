@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Active Bookings</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Borrower</th>
+        <th>Start</th>
+        <th>Due</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bookings %}
+        <tr class="{{ 'late-row' if b.status == 'checked_out' and b.due_date < today else '' }}">
+          <td>{{ b.item.equipment_model.name }} ({{ b.item.asset_tag }})</td>
+          <td>{{ b.borrower.name }}</td>
+          <td>{{ b.start_date }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ b.status }}</td>
+          <td>
+            {% if b.status == 'reserved' %}
+              <form method="post" action="{{ url_for('main.checkout', booking_id=b.id) }}" class="inline">
+                <button type="submit">Check Out</button>
+              </form>
+              <form method="post" action="{{ url_for('main.do_cancel', booking_id=b.id) }}" class="inline">
+                <button type="submit" class="secondary">Cancel</button>
+              </form>
+            {% elif b.status == 'checked_out' %}
+              <form method="post" action="{{ url_for('main.do_return', booking_id=b.id) }}" class="inline">
+                <button type="submit">Return</button>
+              </form>
+              <a href="{{ url_for('main.transfer', booking_id=b.id) }}"><button type="button" class="secondary">Transfer</button></a>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6">No active bookings.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

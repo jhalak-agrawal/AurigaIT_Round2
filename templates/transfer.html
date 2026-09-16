@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Transfer Loan</h1>
+
+  <p>
+    <strong>{{ booking.item.equipment_model.name }}</strong> ({{ booking.item.asset_tag }})
+    &mdash; currently with <strong>{{ booking.borrower.name }}</strong>,
+    due back <strong>{{ booking.due_date }}</strong> (unchanged by this transfer).
+  </p>
+
+  <form method="post">
+    <label>Transfer to
+      <select name="to_borrower_id" required>
+        <option value="">-- select --</option>
+        {% for b in borrowers %}
+          <option value="{{ b.id }}">{{ b.name }} ({{ b.student_id }}){% if b.club_affiliation %} - {{ b.club_affiliation }}{% endif %}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Notes (optional) <input type="text" name="notes" placeholder="e.g. handed off at rehearsal"></label>
+    <button type="submit">Confirm Transfer</button>
+  </form>
+
+  <p><small>
+    {{ booking.borrower.name }}'s deposit is settled as of right now (any late fee already
+    accrued is charged to them, not the new borrower), and the new borrower posts a fresh
+    deposit. The item stays checked out under the same due date throughout - nothing about
+    its availability to anyone else changes.
+  </small></p>
+{% endblock %}

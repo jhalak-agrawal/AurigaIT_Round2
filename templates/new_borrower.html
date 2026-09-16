@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Add Borrower</h1>
+  <form method="post">
+    <label>Name <input type="text" name="name" required></label>
+    <label>Student ID <input type="text" name="student_id" required></label>
+    <label>Email <input type="email" name="email" required></label>
+    <label>Phone <input type="text" name="phone"></label>
+    <label>Club affiliation <input type="text" name="club_affiliation"></label>
+    <button type="submit">Add</button>
+  </form>
+{% endblock %}

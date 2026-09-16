@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Equipment Availability</h1>
+
+  <form method="get" class="inline-form">
+    <label>From <input type="date" name="start" value="{{ start }}"></label>
+    <label>To <input type="date" name="end" value="{{ end }}"></label>
+    <button type="submit">Check</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Model</th>
+        <th>Available / Total</th>
+        <th>Deposit</th>
+        <th>Late fee / day</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.model.type }}</td>
+          <td>{{ row.model.name }}</td>
+          <td class="{{ 'ok' if row.available > 0 else 'none' }}">
+            {{ row.available }} / {{ row.total }}
+          </td>
+          <td>${{ row.model.deposit_amount }}</td>
+          <td>${{ row.model.late_fee_per_day }}</td>
+          <td>
+            {% if row.available > 0 %}
+              <a href="{{ url_for('main.book', equipment_model_id=row.model.id, start=start, end=end) }}">Book</a>
+            {% else %}
+              unavailable
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Overdue</h1>
+  <table>
+    <thead><tr><th>Item</th><th>Borrower</th><th>Was due</th><th>Days late</th><th>Contact</th></tr></thead>
+    <tbody>
+      {% for b in overdue %}
+        <tr class="late-row">
+          <td>{{ b.item.equipment_model.name }} ({{ b.item.asset_tag }})</td>
+          <td>{{ b.borrower.name }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ (today - b.due_date).days }}</td>
+          <td>{{ b.borrower.email }}{% if b.borrower.phone %} / {{ b.borrower.phone }}{% endif %}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">Nothing overdue right now.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h1>Due Soon (next 24h)</h1>
+  <table>
+    <thead><tr><th>Item</th><th>Borrower</th><th>Due</th><th>Contact</th></tr></thead>
+    <tbody>
+      {% for b in due_soon %}
+        <tr>
+          <td>{{ b.item.equipment_model.name }} ({{ b.item.asset_tag }})</td>
+          <td>{{ b.borrower.name }}</td>
+          <td>{{ b.due_date }}</td>
+          <td>{{ b.borrower.email }}{% if b.borrower.phone %} / {{ b.borrower.phone }}{% endif %}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4">Nothing due in the next day.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p><small>
+    This page is the data source for reminders. Wire it to an email/SMS job
+    (see README) that logs each send to the <code>notifications</code> table
+    so people aren't nudged twice for the same booking.
+  </small></p>
+{% endblock %}

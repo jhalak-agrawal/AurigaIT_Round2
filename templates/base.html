@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AV Room Tracker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('main.index') }}">Availability</a>
+    <a href="{{ url_for('main.book') }}">New Booking</a>
+    <a href="{{ url_for('main.bookings') }}">Active Bookings</a>
+    <a href="{{ url_for('main.overdue') }}">Overdue / Due Soon</a>
+    <a href="{{ url_for('main.new_borrower') }}">Add Borrower</a>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flashes">
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>New Booking</h1>
+
+  <form method="post">
+    <label>Borrower
+      <select name="borrower_id" required>
+        <option value="">-- select --</option>
+        {% for b in borrowers %}
+          <option value="{{ b.id }}">{{ b.name }} ({{ b.student_id }}){% if b.club_affiliation %} - {{ b.club_affiliation }}{% endif %}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <p><small>Borrower not listed? <a href="{{ url_for('main.new_borrower') }}">Add one</a>.</small></p>
+
+    <label>Equipment
+      <select name="equipment_model_id" required>
+        <option value="">-- select --</option>
+        {% for m in models %}
+          <option value="{{ m.id }}" {% if m.id == prefill_model %}selected{% endif %}>
+            {{ m.name }} (deposit ${{ m.deposit_amount }}, ${{ m.late_fee_per_day }}/day late)
+          </option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <label>Start date <input type="date" name="start_date" value="{{ prefill_start }}" required></label>
+    <label>Return by <input type="date" name="end_date" value="{{ prefill_end }}" required></label>
+
+    <button type="submit">Reserve</button>
+  </form>
+
+  <p><small>
+    A specific unit is assigned automatically from whatever's free for those dates.
+    The deposit is collected at pickup (see Active Bookings &rarr; Check Out).
+  </small></p>
+{% endblock %}
